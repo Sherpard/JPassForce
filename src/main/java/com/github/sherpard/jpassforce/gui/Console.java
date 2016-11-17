@@ -9,9 +9,17 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.github.sherpard.jpassforce.Alphabet;
 import com.github.sherpard.jpassforce.Alphabet.ALPHABET_TYPE;
+import com.github.sherpard.jpassforce.password.PasswordGuesserAbstract;
+import com.github.sherpard.jpassforce.password.PasswordGuesserAbstract.StrategyType;
 import com.github.sherpard.jpassforce.PasswordLenghtComputer;
 
 public class Console {
+
+  private static final int PASSWORDS_PER_SECOND = 300000;
+
+  private Console() {
+    // Do Nothing
+  }
 
   public static void main(String[] args) {
 
@@ -35,6 +43,26 @@ public class Console {
         "using an alphabet with " + Alphabet.getAlphabet(selectedAlphabet).length() + " variants");
     System.out.println("Has " + String.format("%,d", totalPasswords) + " potential passwords");
 
+    System.out.println();
+    System.out
+        .println("Computing " + String.format("Computing %,d passwords/sec", PASSWORDS_PER_SECOND));
+
+    BigInteger passwordsPerHour = new BigInteger(
+        ((Integer) (PASSWORDS_PER_SECOND * 3600)).toString());
+
+    System.out.println(String.format("It could take %,d hours as maximum",
+        totalPasswords.divide(passwordsPerHour)));
+
+    System.out.println("Trying to solve using linear bruteforce");
+
+    PasswordGuesserAbstract solver = PasswordGuesserAbstract
+        .getPasswordSolver(StrategyType.LINEAR_BRUTEFORCE);
+
+    
+    String password = solver.solvePassword(Alphabet.getAlphabet(selectedAlphabet), passwordLenght);
+    
+    System.err.println(password);
+    
   }
 
   private static Integer requestPasswordLength(Scanner in) {
