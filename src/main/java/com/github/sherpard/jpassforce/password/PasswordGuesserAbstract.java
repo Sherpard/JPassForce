@@ -1,5 +1,7 @@
 package com.github.sherpard.jpassforce.password;
 
+import java.util.Random;
+
 import org.apache.commons.lang3.NotImplementedException;
 
 public abstract class PasswordGuesserAbstract {
@@ -22,20 +24,23 @@ public abstract class PasswordGuesserAbstract {
   protected PasswordGuesserAbstract() {
   }
 
-  public final String solvePassword(String dictionary, int passwordLenght) {
-    createRandomPassword(dictionary, passwordLenght);
-    return this.solvePasswordImpl(dictionary, passwordLenght);
+  protected final boolean checkPassword(String guessedPassword) {
+    return guessedPassword.equals(password);
   }
 
   private void createRandomPassword(String dictionary, int lenght) {
+    this.password = "";
+    
+    Random rand = new Random();
     for (int i = 0; i < lenght; i++) {
-      this.password += dictionary.charAt(dictionary.length() - 1);
+      this.password += dictionary.charAt(rand.nextInt(dictionary.length() - 1));
     }
-
+    System.err.println("Generated password:" + this.password);
   }
 
-  protected final boolean checkPassword(String guessedPassword) {
-    return guessedPassword.equals(password);
+  public final String solvePassword(String dictionary, int passwordLenght) {
+    createRandomPassword(dictionary, passwordLenght);
+    return this.solvePasswordImpl(dictionary, passwordLenght);
   }
 
   protected abstract String solvePasswordImpl(String dictionary, int length);

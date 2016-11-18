@@ -40,7 +40,7 @@ public class LinearBruteforce extends PasswordGuesserAbstract {
     for (int i : currentPassword) {
       currPass.append(charDictionary[i]);
     }
-    System.out.println("Trying " + currPass.toString());
+  //  System.out.println("Trying " + currPass.toString());
     return currPass.toString();
 
   }
@@ -55,6 +55,8 @@ public class LinearBruteforce extends PasswordGuesserAbstract {
       return true;
     } else {
       if (currIdx < this.passwordLength - 1) {
+        //Reset previous caracter
+        currentPassword[currIdx] = 0;
         return recursivelySetNextPassword(currIdx + 1);
       }
     }
